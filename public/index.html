@@ -707,14 +707,12 @@
                 const data = await response.json();
                 
                 if (data.success) {
-                    document.getElementById('serverStatus').textContent = 'Online';
+                    document.getElementById('serverStatus').textContent = 'Online (Fresh Prices)';
                     document.getElementById('serverStatus').classList.add('online');
                     
-                    if (data.cache.hasPairs) {
-                        document.getElementById('totalPairs').textContent = data.cache.pairCount;
-                        if (data.cache.lastUpdated) {
-                            updateTimestamp(data.cache.lastUpdated);
-                        }
+                    // No cached pairs count since we always fetch fresh
+                    if (data.cache.assetsMetadataCached) {
+                        updateTimestamp(data.cache.lastMetadataUpdate);
                     }
                 } else {
                     throw new Error('Health check failed');
@@ -779,7 +777,7 @@
                 refreshBtn.style.display = 'inline-block';
                 document.getElementById('swapSection').style.display = 'block';
                 
-                const cacheStatus = result.cached ? ' (cached)' : ' (fresh)';
+                const cacheStatus = result.priceDataFresh ? ' (fresh prices)' : ' (cached)';
                 showMessage('success', `Loaded ${allPairs.length} pairs (page ${currentPage}/${totalPages})${cacheStatus}`);
 
             } catch (error) {
